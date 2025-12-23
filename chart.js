@@ -15,7 +15,7 @@ function initCharts(data) {
     
     // Инициализируем графики
     initTrendChart(data);
-    initCategoriesChart(data);
+    // Круговая диаграмма категорий перенесена в раздел "Бюджет"
     
     console.log('Графики инициализированы');
 }
@@ -74,36 +74,35 @@ function initTrendChart(data) {
                     label: 'Доходы',
                     data: incomeData,
                     borderColor: '#0EA5E9',
-                    backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                    backgroundColor: 'rgba(14, 165, 233, 0.2)',
                     borderWidth: 3,
                     tension: 0.4,
                     fill: true,
                     pointBackgroundColor: '#0EA5E9',
                     pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 6,
-                    pointHoverRadius: 8
+                    pointBorderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
                 },
                 {
                     label: 'Расходы',
                     data: expenseData,
                     borderColor: '#64748B',
-                    backgroundColor: 'rgba(100, 116, 139, 0.1)',
+                    backgroundColor: 'rgba(100, 116, 139, 0.2)',
                     borderWidth: 3,
                     tension: 0.4,
                     fill: true,
                     pointBackgroundColor: '#64748B',
                     pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 6,
-                    pointHoverRadius: 8
+                    pointBorderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
                 }
             ]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 1.5,
+            maintainAspectRatio: false,
             animation: {
                 duration: 1000,
                 easing: 'easeInOutQuart'
@@ -112,12 +111,46 @@ function initTrendChart(data) {
                 intersect: false,
                 mode: 'index'
             },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: {
+                            size: 12
+                        },
+                        color: 'var(--text-primary)'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + new Intl.NumberFormat('ru-RU').format(context.parsed.y) + ' ₽';
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
                     grid: {
                         drawBorder: false,
-                        color: 'rgba(0, 0, 0, 0.05)'
+                        color: function(context) {
+                            if (context.tick && context.tick.value === 0) {
+                                return 'rgba(0, 0, 0, 0.1)';
+                            }
+                            return 'rgba(0, 0, 0, 0.05)';
+                        }
                     },
                     ticks: {
                         callback: function(value) {
@@ -127,7 +160,9 @@ function initTrendChart(data) {
                             size: 11
                         },
                         padding: 10,
-                        color: 'var(--text-secondary)'
+                        color: function() {
+                            return getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') || '#6C757D';
+                        }
                     }
                 },
                 x: {
@@ -139,7 +174,9 @@ function initTrendChart(data) {
                             size: 12
                         },
                         padding: 10,
-                        color: 'var(--text-secondary)'
+                        color: function() {
+                            return getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') || '#6C757D';
+                        }
                     }
                 }
             },

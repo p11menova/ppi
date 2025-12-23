@@ -410,8 +410,16 @@ const FinanceApp = {
             quickTransfer.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-            this.openTransactionModal('transfer');
-        });
+                this.openAddSavingsModal();
+            });
+        }
+
+        // Клик по аватару открывает профиль
+        const profileAvatarClick = document.getElementById('profileAvatarClick');
+        if (profileAvatarClick) {
+            profileAvatarClick.addEventListener('click', () => {
+                this.navigateTo('profile');
+            });
         }
 
         // Переключение темы
@@ -420,8 +428,8 @@ const FinanceApp = {
             themeToggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                this.toggleTheme();
-            });
+            this.toggleTheme();
+        });
         }
 
         // Поиск
@@ -546,18 +554,9 @@ const FinanceApp = {
             e.preventDefault();
                 e.stopPropagation();
                 this.openAddGoalModal();
-            });
+        });
         }
 
-        // Добавление к накоплениям
-        const addSavingsBtn = document.getElementById('addSavingsBtn');
-        if (addSavingsBtn) {
-            addSavingsBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.openAddSavingsModal();
-            });
-        }
 
         // Настройки
         document.getElementById('notificationsToggle').addEventListener('change', (e) => {
@@ -684,8 +683,6 @@ const FinanceApp = {
     initUI() {
         this.updateDate();
         this.updateBalance();
-        this.renderTransactions();
-        this.renderCategories();
         this.renderGoals();
         this.updateProfile();
         this.applyTheme();
@@ -697,8 +694,6 @@ const FinanceApp = {
     // Обновление UI
     updateUI() {
         this.updateBalance();
-        this.renderTransactions();
-        this.renderCategories();
         this.renderGoals();
         this.updateProfile();
 
@@ -734,7 +729,8 @@ const FinanceApp = {
     updateThemeIcon() {
         const icon = document.getElementById('themeIcon');
         if (icon) {
-            icon.className = this.config.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            // Показываем солнце в светлой теме, луну в темной
+            icon.className = this.config.theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
         }
     },
 
@@ -796,17 +792,105 @@ const FinanceApp = {
 
     // Обновление домашней страницы
     updateHomePage() {
-        this.renderTransactions();
-        this.renderCategories();
         this.renderGoals();
-        this.updateTip();
     },
 
     // Обновление страницы бюджета
     updateBudgetPage() {
-        this.updateBudgetProgress();
         this.renderBudgetCategories();
         this.setupBudgetPageListeners();
+        this.initBudgetChart();
+    },
+
+    // Инициализация графика категорий для бюджета
+    initBudgetChart() {
+        const ctx = document.getElementById('budgetCategoriesChart');
+        if (!ctx) return;
+
+        const budgetPage = document.getElementById('budgetPage');
+        if (!budgetPage || !budgetPage.classList.contains('active')) {
+            setTimeout(() => this.initBudgetChart(), 300);
+            return;
+        }
+
+        // Уничтожаем предыдущий график если есть
+        if (window.budgetCategoriesChart) {
+            try {
+                window.budgetCategoriesChart.destroy();
+            } catch (e) {
+                console.warn('Ошибка при уничтожении старого графика:', e);
+            }
+        }
+
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js не загружен');
+            return;
+        }
+
+        // Получаем данные по категориям
+        const categoriesWithSpent = this.data.categories
+            .filter(c => c.budget > 0)
+            .map(cat => {
+                const spent = this.calculateCategorySpent(cat.id);
+                return {
+                    name: cat.name,
+                    spent: spent,
+                    color: cat.color
+                };
+            })
+            .filter(c => c.spent > 0);
+
+        if (categoriesWithSpent.length === 0) {
+            ctx.parentElement.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--text-secondary);">Нет данных для отображения</div>';
+            return;
+        }
+
+        try {
+            window.budgetCategoriesChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: categoriesWithSpent.map(c => c.name),
+                    datasets: [{
+                        data: categoriesWithSpent.map(c => c.spent),
+                        backgroundColor: categoriesWithSpent.map(c => c.color),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                },
+                                color: 'var(--text-primary)'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    return `${context.label}: ${this.formatCurrency(context.parsed)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%',
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Ошибка создания графика бюджета:', error);
+        }
     },
 
     // Настройка обработчиков страницы бюджета
@@ -844,10 +928,9 @@ const FinanceApp = {
             }
             
             const trendChartEl = document.getElementById('trendChart');
-            const categoriesChartEl = document.getElementById('categoriesChart');
             
-            if (!trendChartEl || !categoriesChartEl) {
-                console.warn('Canvas элементы не найдены');
+            if (!trendChartEl) {
+                console.warn('Canvas элемент trendChart не найден');
                 return false;
             }
             
@@ -1146,9 +1229,9 @@ const FinanceApp = {
 
         console.log('renderGoals: текущие цели:', this.data.goals);
 
+        // Показываем все цели, а не только первые 2
         const activeGoals = this.data.goals
-            .filter(g => g && g.current < g.target)
-            .slice(0, 2);
+            .filter(g => g && g.current < g.target);
         
         console.log('renderGoals: активные цели для отображения:', activeGoals);
 
@@ -1363,16 +1446,16 @@ const FinanceApp = {
             
             return `
                 <div class="category-option" data-category="${category.id}" data-custom="${category.isCustom || false}" data-can-delete="${canDelete}" style="position: relative;">
-                    <div class="category-option-icon" style="background: ${category.color};">
-                        <i class="fas fa-${category.icon}"></i>
-                    </div>
-                    <div class="category-option-name">${category.name}</div>
+                <div class="category-option-icon" style="background: ${category.color};">
+                    <i class="fas fa-${category.icon}"></i>
+                </div>
+                <div class="category-option-name">${category.name}</div>
                     ${canDelete ? `
                         <button class="category-delete-btn" onclick="event.stopPropagation(); FinanceApp.deleteCategoryFromList('${category.id}');" title="Удалить категорию">
                             <i class="fas fa-times"></i>
                         </button>
                     ` : ''}
-                </div>
+            </div>
             `;
         }).join('');
 

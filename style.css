@@ -464,13 +464,13 @@
 /* Рекомендации по бюджету */
 .budget-recommendations {
     background: linear-gradient(135deg, var(--primary-light) 0%, var(--blue-light) 100%);
-    border-radius: var(--radius-xl);
-    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
     border: 1px solid var(--primary-light);
     box-shadow: 
         0 4px 16px rgba(30, 58, 138, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-lg);
     position: relative;
     overflow: hidden;
 }
@@ -509,22 +509,22 @@
 .recommendation-header {
     display: flex;
     align-items: center;
-    gap: var(--space);
-    margin-bottom: var(--space-lg);
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
     position: relative;
     z-index: 1;
 }
 
 .recommendation-header i {
     color: var(--primary);
-    font-size: var(--font-size-xl);
-    width: 40px;
-    height: 40px;
+    font-size: var(--font-size-md);
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(30, 58, 138, 0.1);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
 }
 
 .recommendation-title {
@@ -536,8 +536,8 @@
 
 .recommendation-content {
     color: var(--text-secondary);
-    font-size: var(--font-size);
-    line-height: 1.6;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
     position: relative;
     z-index: 1;
 }
@@ -636,7 +636,7 @@
 }
 
 .recommendation-title {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
     font-weight: 700;
     color: var(--text-primary);
     letter-spacing: -0.3px;
@@ -644,8 +644,8 @@
 
 .recommendation-content {
     color: var(--text-secondary);
-    font-size: var(--font-size);
-    line-height: 1.6;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
 }
 
 .recommendation-content p {
@@ -721,9 +721,7 @@ body {
 .app-header {
     background: var(--gradient-primary);
     color: var(--white);
-    padding: var(--space-md);
-    padding-top: calc(var(--space-sm) + var(--safe-top));
-    padding-bottom: var(--space-md);
+    padding: calc(var(--space-xs) + var(--safe-top)) var(--space-sm) var(--space-sm);
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
@@ -747,7 +745,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-sm);
     position: relative;
     z-index: 1;
 }
@@ -755,13 +753,13 @@ body {
 .header-left {
     display: flex;
     align-items: center;
-    gap: var(--space);
+    gap: var(--space-xs);
 }
 
 /* Аватар пользователя */
 .avatar-small {
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
@@ -770,7 +768,7 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
     color: var(--white);
     border: 2px solid rgba(255, 255, 255, 0.3);
     box-shadow: var(--shadow-sm);
@@ -789,7 +787,7 @@ body {
 }
 
 .user-name {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-sm);
     font-weight: 700;
     margin-top: 2px;
 }
@@ -797,20 +795,20 @@ body {
 /* Кнопки действий в шапке */
 .header-actions {
     display: flex;
-    gap: var(--space);
+    gap: var(--space-xs);
 }
 
 .header-btn {
     background: rgba(255, 255, 255, 0.15);
     border: none;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     border-radius: var(--radius-full);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--white);
-    font-size: var(--font-size);
+    font-size: var(--font-size-sm);
     cursor: pointer;
     transition: all var(--transition);
     backdrop-filter: blur(10px);
@@ -854,7 +852,7 @@ body {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: var(--radius-lg);
-    padding: var(--space-lg);
+    padding: var(--space-sm);
     border: 1px solid rgba(255, 255, 255, 0.2);
     position: relative;
     z-index: 1;
@@ -868,14 +866,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space);
+    margin-bottom: var(--space-xs);
 }
 
 .balance-label {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     opacity: 0.9;
     font-weight: 500;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
 .balance-change {
@@ -897,9 +895,9 @@ body {
 }
 
 .balance-amount {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
     font-weight: 800;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-sm);
     letter-spacing: -0.5px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -908,13 +906,13 @@ body {
 .balance-details {
     display: flex;
     justify-content: space-between;
-    gap: var(--space);
+    gap: var(--space-xs);
 }
 
 .detail-item {
     display: flex;
     align-items: center;
-    gap: var(--space);
+    gap: var(--space-xs);
     flex: 1;
     position: relative;
 }
@@ -963,13 +961,13 @@ body {
 }
 
 .detail-icon {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     border-radius: var(--radius);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--font-size);
+    font-size: var(--font-size-xs);
     color: var(--white);
     flex-shrink: 0;
     box-shadow: var(--shadow-sm);
@@ -1022,7 +1020,7 @@ body {
 }
 
 .detail-value {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-sm);
     font-weight: 700;
     letter-spacing: -0.2px;
 }
@@ -2006,10 +2004,10 @@ body {
 /* Карточка с графиками */
 .chart-card {
     background: var(--bg-card);
-    border-radius: var(--radius-xl);
-    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
     border: 1px solid var(--border-color);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
     box-shadow: 
         0 4px 16px rgba(0, 0, 0, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -2041,13 +2039,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space-xl);
-    padding-bottom: var(--space);
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-xs);
     border-bottom: 1px solid var(--border-color);
 }
 
 .chart-title {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
     font-weight: 700;
     color: var(--text-primary);
     letter-spacing: -0.3px;
@@ -2055,16 +2053,18 @@ body {
 
 .chart-container {
     position: relative;
-    height: 280px;
+    height: 300px;
     width: 100%;
-    margin-top: var(--space-lg);
-    min-height: 280px;
+    margin-top: var(--space-sm);
+    min-height: 300px;
 }
 
 .chart-container canvas {
     max-width: 100% !important;
     max-height: 100% !important;
     display: block !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .btn-icon {
@@ -2246,7 +2246,7 @@ body {
 }
 
 .profile-name {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-3xl);
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: var(--space-xs);
@@ -2254,7 +2254,7 @@ body {
 }
 
 .profile-email {
-    font-size: var(--font-size);
+    font-size: var(--font-size-lg);
     color: var(--text-secondary);
     margin-bottom: var(--space-lg);
 }
@@ -2270,7 +2270,7 @@ body {
 }
 
 .profile-stats .stat-value {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-2xl);
     font-weight: 700;
     color: var(--primary);
     margin-bottom: var(--space-xs);
@@ -2278,7 +2278,7 @@ body {
 }
 
 .profile-stats .stat-label {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size);
     color: var(--text-secondary);
     font-weight: 500;
 }
@@ -2442,7 +2442,7 @@ body {
     }
     
     .chart-container {
-        height: 250px;
+        height: 180px;
     }
 
     .stats-grid {
