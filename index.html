@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FinFlow | Управление финансами</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="theme-color" content="#1E3A8A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+<div class="app-container">
+    <!-- Статус бар -->
+    <div class="status-bar"></div>
+
+    <!-- Шапка приложения -->
+    <header class="app-header">
+        <div class="header-top">
+            <div class="header-left">
+                <div class="avatar-small" id="userAvatarSmall">ИИ</div>
+                <div class="greeting">
+                    <div class="greeting-text">Добро пожаловать!</div>
+                    <div class="user-name" id="userNameSmall">Иван</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" id="themeToggle" aria-label="Сменить тему">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <button class="header-btn" id="searchBtn" aria-label="Поиск">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="header-btn" id="notificationsBtn" aria-label="Уведомления">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge">2</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Карточка баланса -->
+        <div class="balance-card">
+            <div class="balance-info">
+                <div class="balance-label">Общий баланс</div>
+                <div class="balance-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12.5% за месяц</span>
+                </div>
+            </div>
+            <div class="balance-amount" id="totalBalance">45 780 ₽</div>
+
+            <div class="balance-details">
+                <div class="detail-item">
+                    <div class="detail-icon income">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-label">Доходы</div>
+                        <div class="detail-value" id="incomeTotal">85 000 ₽</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon expense">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-label">Расходы</div>
+                        <div class="detail-value" id="expenseTotal">39 220 ₽</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon savings">
+                        <i class="fas fa-piggy-bank"></i>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-label">Накопления</div>
+                        <div class="detail-value" id="savingsTotal">15 500 ₽</div>
+                    </div>
+                    <button class="btn-icon btn-add-savings" id="addSavingsBtn" title="Добавить к накоплениям">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основная область контента -->
+    <main class="app-content">
+        <!-- Главная страница -->
+        <div class="page active" id="homePage">
+            <!-- Быстрые действия -->
+            <div class="quick-actions" id="quickActions">
+                <button class="quick-action" id="quickAddIncome">
+                    <div class="quick-action-icon income">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <span class="quick-action-label">Доход</span>
+                </button>
+                <button class="quick-action" id="quickAddExpense">
+                    <div class="quick-action-icon expense">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <span class="quick-action-label">Расход</span>
+                </button>
+                <button class="quick-action" id="quickTransfer">
+                    <div class="quick-action-icon transfer">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <span class="quick-action-label">Перевод</span>
+                </button>
+            </div>
+
+            <!-- Последние транзакции -->
+            <div class="section-header">
+                <h2 class="section-title">Последние операции</h2>
+                <button class="section-link" id="viewAllTransactions">
+                    Все
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="transactions-list" id="recentTransactions">
+                <!-- Транзакции загружаются через JavaScript -->
+            </div>
+
+            <!-- Категории расходов -->
+            <div class="section-header">
+                <h2 class="section-title">Категории расходов</h2>
+                <button class="section-link" id="viewCategories">
+                    Подробнее
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="categories-preview" id="categoriesPreview">
+                <!-- Категории загружаются через JavaScript -->
+            </div>
+
+            <!-- Мои цели -->
+            <div class="section-header">
+                <h2 class="section-title">Мои цели</h2>
+                <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                    <button class="btn-icon btn-sm" id="addGoalBtn" title="Добавить цель">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="section-link" id="viewGoals">
+                        Все цели
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="goals-preview" id="goalsPreview">
+                <!-- Цели загружаются через JavaScript -->
+            </div>
+
+            <!-- Полезный совет -->
+            <div class="tip-card">
+                <div class="tip-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3 class="tip-title">Совет дня</h3>
+                </div>
+                <div class="tip-text" id="tipText">
+                    Попробуйте "правило 24 часов" для импульсных покупок: подождите сутки перед совершением покупки.
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница транзакций -->
+        <div class="page" id="transactionsPage">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <button class="back-btn" id="backToHome">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 class="page-title">Все транзакции</h2>
+                </div>
+                <div class="page-header-actions">
+                    <button class="header-btn" id="filterTransactions">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <button class="header-btn" id="sortTransactions">
+                        <i class="fas fa-sort-amount-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="transactions-container" id="allTransactions">
+                <!-- Все транзакции загружаются через JavaScript -->
+            </div>
+        </div>
+
+        <!-- Страница бюджета -->
+        <div class="page" id="budgetPage">
+            <div class="page-header">
+                <h2 class="page-title">Бюджет</h2>
+                <button class="header-btn" id="budgetSettings">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+
+            <!-- Прогресс бюджета -->
+            <div class="budget-progress">
+                <div class="budget-header">
+                    <div class="budget-info">
+                        <div class="budget-label">Месячный бюджет</div>
+                        <div class="budget-amount">100 000 ₽</div>
+                    </div>
+                    <div class="budget-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Потрачено</div>
+                            <div class="stat-value">39 220 ₽</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Осталось</div>
+                            <div class="stat-value positive">60 780 ₽</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 39.2%"></div>
+                </div>
+            </div>
+
+            <!-- Категории с лимитами -->
+            <div class="section-header">
+                <h3 class="section-title">Категории с лимитами</h3>
+                <button class="btn-text" id="manageLimits">Управлять</button>
+            </div>
+
+            <div class="budget-categories" id="budgetCategories">
+                <!-- Категории с лимитами загружаются через JavaScript -->
+            </div>
+
+            <!-- Рекомендации по бюджету -->
+            <div class="budget-recommendations">
+                <div class="recommendation-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3 class="recommendation-title">Рекомендации</h3>
+                </div>
+                <div class="recommendation-content">
+                    <p>Вы хорошо укладываетесь в бюджет! В этом месяце можно увеличить сбережения на 15%.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница аналитики -->
+        <div class="page" id="analyticsPage">
+            <div class="page-header">
+                <h2 class="page-title">Аналитика</h2>
+                <div class="period-selector">
+                    <select id="analyticsPeriod" class="period-select">
+                        <option value="week">Неделя</option>
+                        <option value="month" selected>Месяц</option>
+                        <option value="quarter">Квартал</option>
+                        <option value="year">Год</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Сводные показатели -->
+            <div class="analytics-summary">
+                <div class="summary-card">
+                    <div class="summary-icon income">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-label">Средний доход</div>
+                        <div class="summary-value">85 000 ₽</div>
+                        <div class="summary-change positive">+5.2%</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon expense">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-label">Средний расход</div>
+                        <div class="summary-value">39 220 ₽</div>
+                        <div class="summary-change negative">-3.1%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Графики -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Динамика доходов/расходов</h3>
+                    <button class="btn-icon" id="expandChart">
+                        <i class="fas fa-expand-alt"></i>
+                    </button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Расходы по категориям</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="categoriesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Подробная статистика -->
+            <div class="stats-card">
+                <h3 class="stats-title">Детальная статистика</h3>
+                <div class="stats-grid" id="detailedStats">
+                    <!-- Статистика загружается через JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница профиля -->
+        <div class="page" id="profilePage">
+            <div class="page-header">
+                <h2 class="page-title">Профиль</h2>
+            </div>
+
+            <!-- Информация пользователя -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="userAvatar">ИИ</div>
+                    <div class="profile-info">
+                        <h3 class="profile-name" id="userName">Иван Иванов</h3>
+                        <p class="profile-email" id="userEmail">ivan@example.com</p>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <div class="stat-value">45 780 ₽</div>
+                                <div class="stat-label">Баланс</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">15 500 ₽</div>
+                                <div class="stat-label">Накопления</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-icon edit-profile" id="editProfileBtn">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Настройки -->
+            <div class="settings-section">
+                <h3 class="settings-title">Настройки</h3>
+                <div class="settings-list">
+                    <div class="setting-item" id="currencySetting">
+                        <div class="setting-content">
+                            <i class="setting-icon fas fa-money-bill-wave"></i>
+                            <div>
+                                <div class="setting-name">Валюта</div>
+                                <div class="setting-description">Рубли (₽)</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div class="setting-item" id="notificationsSetting">
+                        <div class="setting-content">
+                            <i class="setting-icon fas fa-bell"></i>
+                            <div>
+                                <div class="setting-name">Уведомления</div>
+                                <div class="setting-description">Пуш и email</div>
+                            </div>
+                        </div>
+                        <div class="switch">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span class="slider"></span>
+                        </div>
+                    </div>
+
+                    <div class="setting-item" id="securitySetting">
+                        <div class="setting-content">
+                            <i class="setting-icon fas fa-shield-alt"></i>
+                            <div>
+                                <div class="setting-name">Безопасность</div>
+                                <div class="setting-description">Биометрия, PIN-код</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div class="setting-item" id="backupSetting">
+                        <div class="setting-content">
+                            <i class="setting-icon fas fa-cloud-upload-alt"></i>
+                            <div>
+                                <div class="setting-name">Резервное копирование</div>
+                                <div class="setting-description">Облачный бэкап</div>
+                            </div>
+                        </div>
+                        <div class="switch">
+                            <input type="checkbox" id="backupToggle" checked>
+                            <span class="slider"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Интеграции -->
+            <div class="integrations-section">
+                <h3 class="integrations-title">Интеграции</h3>
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="integration-content">
+                            <div class="integration-icon bank">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="integration-info">
+                                <div class="integration-name">Банковские счета</div>
+                                <div class="integration-status">Не подключено</div>
+                            </div>
+                        </div>
+                        <button class="btn-outline btn-sm" id="connectBank">Подключить</button>
+                    </div>
+
+                    <div class="integration-item">
+                        <div class="integration-content">
+                            <div class="integration-icon export">
+                                <i class="fas fa-file-export"></i>
+                            </div>
+                            <div class="integration-info">
+                                <div class="integration-name">Экспорт данных</div>
+                                <div class="integration-status">CSV, Excel, PDF</div>
+                            </div>
+                        </div>
+                        <button class="btn-outline btn-sm" id="exportData">Экспорт</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- О приложении -->
+            <div class="about-section">
+                <div class="app-version">FinFlow v2.0.0</div>
+                <div class="app-links">
+                    <a href="#" class="app-link">Политика конфиденциальности</a>
+                    <a href="#" class="app-link">Условия использования</a>
+                    <a href="#" class="app-link">Поддержка</a>
+                    <a href="#" class="app-link">Оценить приложение</a>
+                </div>
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти из аккаунта
+                </button>
+            </div>
+        </div>
+
+        <!-- Страница добавления цели -->
+        <div class="page" id="addGoalPage">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <button class="back-btn" id="backFromGoal">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 class="page-title">Новая цель</h2>
+                </div>
+            </div>
+            <div class="form-container">
+                <form id="goalForm">
+                    <div class="form-group">
+                        <label class="form-label">Название цели</label>
+                        <input type="text" id="goalName" class="form-input" placeholder="Например: Новый ноутбук" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Целевая сумма</label>
+                        <div class="amount-input">
+                            <input type="number" id="goalTarget" class="form-input" placeholder="0" step="1000" min="1000" required>
+                            <span class="currency">₽</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Срок достижения</label>
+                        <input type="date" id="goalDeadline" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Цвет цели</label>
+                        <div class="color-picker" id="goalColorPicker">
+                            <div class="color-option" style="background: #1E3A8A;" data-color="#1E3A8A"></div>
+                            <div class="color-option" style="background: #3B82F6;" data-color="#3B82F6"></div>
+                            <div class="color-option" style="background: #0EA5E9;" data-color="#0EA5E9"></div>
+                            <div class="color-option" style="background: #475569;" data-color="#475569"></div>
+                            <div class="color-option" style="background: #64748B;" data-color="#64748B"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-save"></i>
+                        Сохранить цель
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Навигация -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-page="home">
+            <i class="nav-icon fas fa-home"></i>
+            <span class="nav-label">Главная</span>
+        </button>
+        <button class="nav-item" data-page="transactions">
+            <i class="nav-icon fas fa-exchange-alt"></i>
+            <span class="nav-label">Операции</span>
+        </button>
+        <button class="nav-item" data-page="budget">
+            <i class="nav-icon fas fa-chart-pie"></i>
+            <span class="nav-label">Бюджет</span>
+        </button>
+        <button class="nav-item" data-page="analytics">
+            <i class="nav-icon fas fa-chart-line"></i>
+            <span class="nav-label">Аналитика</span>
+        </button>
+        <button class="nav-item" data-page="profile">
+            <i class="nav-icon fas fa-user"></i>
+            <span class="nav-label">Профиль</span>
+        </button>
+    </nav>
+</div>
+
+<!-- Модальные окна -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="addTransactionModal">
+        <div class="modal-header">
+            <h3 class="modal-title">Новая операция</h3>
+            <button class="modal-close" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="transactionForm">
+                <!-- Тип операции -->
+                <div class="form-group">
+                    <div class="type-selector">
+                        <button type="button" class="type-option active" data-type="expense">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Расход</span>
+                        </button>
+                        <button type="button" class="type-option" data-type="income">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>Доход</span>
+                        </button>
+                        <button type="button" class="type-option" data-type="transfer">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Перевод</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Сумма -->
+                <div class="form-group">
+                    <label class="form-label">Сумма</label>
+                    <div class="amount-input">
+                        <input type="number" id="amount" class="form-input" placeholder="0" step="0.01" min="0.01" required>
+                        <span class="currency">₽</span>
+                    </div>
+                </div>
+
+                <!-- Категория -->
+                <div class="form-group">
+                    <label class="form-label">Категория</label>
+                    <div class="categories-grid" id="categoriesGrid">
+                        <!-- Категории загружаются через JS -->
+                    </div>
+                </div>
+
+                <!-- Описание -->
+                <div class="form-group">
+                    <label class="form-label">Описание</label>
+                    <input type="text" id="description" class="form-input" >
+                </div>
+
+                <!-- Дата -->
+                <div class="form-group">
+                    <label class="form-label">Дата</label>
+                    <input type="date" id="date" class="form-input" required>
+                </div>
+
+                <!-- Повторение -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="recurring" class="form-checkbox">
+                        <label for="recurring" class="checkbox-label">Повторяющаяся операция</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-save"></i>
+                    Сохранить операцию
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно фильтрации -->
+<div class="modal-overlay" id="filterModalOverlay">
+    <div class="modal" id="filterModal">
+        <div class="modal-header">
+            <h3 class="modal-title">Фильтрация транзакций</h3>
+            <button class="modal-close" id="closeFilterModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="filterForm">
+                <div class="form-group">
+                    <label class="form-label">Тип операции</label>
+                    <select id="filterType" class="form-select">
+                        <option value="all">Все операции</option>
+                        <option value="income">Доходы</option>
+                        <option value="expense">Расходы</option>
+                        <option value="transfer">Переводы</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Категория</label>
+                    <select id="filterCategory" class="form-select">
+                        <option value="all">Все категории</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Период</label>
+                    <select id="filterPeriod" class="form-select">
+                        <option value="all">За все время</option>
+                        <option value="today">Сегодня</option>
+                        <option value="week">Эта неделя</option>
+                        <option value="month" selected>Этот месяц</option>
+                        <option value="year">Этот год</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Сумма от</label>
+                    <div class="range-inputs">
+                        <input type="number" id="filterAmountFrom" class="form-input" placeholder="0">
+                        <span class="range-separator">до</span>
+                        <input type="number" id="filterAmountTo" class="form-input" placeholder="100000">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-filter"></i>
+                    Применить фильтры
+                </button>
+                <button type="button" class="btn btn-outline btn-block mt-3" id="resetFilters">
+                    <i class="fas fa-redo"></i>
+                    Сбросить фильтры
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Уведомления -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Загрузчик -->
+<div class="loader-overlay" id="loaderOverlay">
+    <div class="loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Загрузка...</div>
+    </div>
+</div>
+
+<!-- Подключаем FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Подключаем Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Подключаем скрипты -->
+<script src="data.js"></script>
+<script src="chart.js"></script>
+<script src="app.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        FinanceApp.init();
+    });
+</script>
+</body>
+</html>
